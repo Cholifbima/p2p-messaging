@@ -90,15 +90,15 @@ python main.py
 ## Fitur GUI
 
 ### Login Window
-- 📝 Input nama dan port
-- 🎨 Modern dark theme dengan CustomTkinter
-- 📐 Window resizable untuk split-screen
+- Input nama dan port
+- Modern dark theme dengan CustomTkinter
+- Window resizable untuk split-screen
 
 ### Main Application
-- 👤 **Sidebar Kiri**: Daftar peer terhubung (klik untuk memilih chat)
-- 💬 **Area Chat**: Tampilan percakapan private dengan peer terpilih
-- 📤 **Input Pesan**: Kotak input untuk mengirim pesan
-- 🔗 **Connect Button**: Tambah koneksi ke peer baru
+- **Sidebar Kiri**: Daftar peer terhubung (klik untuk memilih chat)
+- **Area Chat**: Tampilan percakapan private dengan peer terpilih
+- **Input Pesan**: Kotak input untuk mengirim pesan
+- **Connect Button**: Tambah koneksi ke peer baru
 
 ### Private Chat
 - Klik nama peer di sidebar untuk memulai chat private
@@ -135,14 +135,14 @@ Semua pesan menggunakan format JSON:
 
 ## Fitur
 
-- ✅ **Private Chat (1-to-1)** - Kirim pesan langsung ke peer tertentu
-- ✅ **GUI Modern** - CustomTkinter dengan dark theme
-- ✅ **Bahasa Indonesia** - Interface lengkap Bahasa Indonesia
-- ✅ **Resizable Window** - Dapat diatur untuk split-screen
-- ✅ **Multi-Peer Support** - Hubungkan dengan banyak peer
-- ✅ **Real-time Updates** - Notifikasi peer join/leave
-- ✅ **Clean Code** - Tanpa komentar AI yang berlebihan
-- ✅ **Cross-platform** - Windows, Linux, macOS
+- **Private Chat (1-to-1)** - Kirim pesan langsung ke peer tertentu
+- **GUI Modern** - CustomTkinter dengan dark theme
+- **Bahasa Indonesia** - Interface lengkap Bahasa Indonesia
+- **Resizable Window** - Dapat diatur untuk split-screen
+- **Multi-Peer Support** - Hubungkan dengan banyak peer
+- **Real-time Updates** - Notifikasi peer join/leave
+- **Clean Code** - Tanpa komentar AI yang berlebihan
+- **Cross-platform** - Windows, Linux, macOS
 
 ## Kebutuhan Sistem
 
@@ -156,14 +156,6 @@ Semua pesan menggunakan format JSON:
 - **Default Port**: `5000`
 - **Theme**: Dark Mode
 - **Bahasa**: Indonesia
-
-## Screenshots
-
-*(Tambahkan screenshots GUI di sini)*
-
-1. **Login Window** - Form input nama dan port
-2. **Main Window** - Tampilan utama dengan sidebar peer
-3. **Private Chat** - Contoh percakapan private antar peer
 
 ## Cara Penggunaan
 
