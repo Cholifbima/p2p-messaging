@@ -128,10 +128,7 @@ Semua pesan menggunakan format JSON:
 | `JOIN` | Peer baru bergabung ke jaringan |
 | `LEAVE` | Peer keluar dari jaringan |
 | `MESSAGE` | Direct message ke peer tertentu |
-| `BROADCAST` | Pesan ke semua peer (tidak digunakan) |
 | `PEERS` | Berbagi daftar peer yang diketahui |
-| `PING` | Health check |
-| `PONG` | Response dari ping |
 
 ## Fitur
 
