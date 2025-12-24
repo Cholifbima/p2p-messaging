@@ -1,7 +1,4 @@
-"""
-Network Layer for P2P Communication
-Handles TCP connections, both server and client sides
-"""
+# Layer network untuk P2P
 import socket
 import threading
 import logging
@@ -12,10 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class ConnectionHandler:
-    """
-    Handles a single peer connection
-    Manages reading/writing messages over the socket
-    """
+    # handle koneksi peer
     
     def __init__(
         self,
@@ -36,13 +30,13 @@ class ConnectionHandler:
         self.buffer = ""
     
     def start(self):
-        """Start receiving messages in a separate thread"""
+        # mulai receive pesan
         self.running = True
         self.receive_thread = threading.Thread(target=self._receive_loop, daemon=True)
         self.receive_thread.start()
     
     def stop(self):
-        """Stop the connection handler"""
+        # stop koneksi
         self.running = False
         try:
             self.socket.close()
@@ -50,7 +44,7 @@ class ConnectionHandler:
             pass
     
     def send(self, message: Message):
-        """Send a message through this connection"""
+        # kirim pesan
         try:
             self.socket.sendall(message.to_bytes())
         except Exception as e:
@@ -58,7 +52,7 @@ class ConnectionHandler:
             self._handle_disconnect()
     
     def _receive_loop(self):
-        """Main loop for receiving messages"""
+        # loop untuk receive pesan
         self.socket.settimeout(1.0)  # Allow periodic checking of running flag
         
         while self.running:
@@ -90,16 +84,14 @@ class ConnectionHandler:
                 break
     
     def _handle_disconnect(self):
-        """Handle disconnection"""
+        # handle disconnection
         self.running = False
         if self.on_disconnect:
             self.on_disconnect(self)
 
 
 class P2PServer:
-    """
-    TCP Server that listens for incoming peer connections
-    """
+    # TCP server untuk P2P
     
     def __init__(
         self,
@@ -115,7 +107,7 @@ class P2PServer:
         self.accept_thread = None
     
     def start(self):
-        """Start the server"""
+        # jalankan server
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind((self.host, self.port))
@@ -129,13 +121,13 @@ class P2PServer:
         logger.info(f"P2P Server listening on {self.host}:{self.port}")
     
     def stop(self):
-        """Stop the server"""
+        # stop server
         self.running = False
         if self.server_socket:
             self.server_socket.close()
     
     def _accept_loop(self):
-        """Accept incoming connections"""
+        # loop untuk accept koneksi
         while self.running:
             try:
                 client_socket, address = self.server_socket.accept()
@@ -152,9 +144,7 @@ class P2PServer:
 
 
 class P2PClient:
-    """
-    TCP Client for connecting to other peers
-    """
+    # TCP client untuk P2P
     
     @staticmethod
     def connect(
@@ -162,17 +152,7 @@ class P2PClient:
         port: int,
         timeout: float = 5.0
     ) -> Optional[ConnectionHandler]:
-        """
-        Connect to a peer
-        
-        Args:
-            host: Target host
-            port: Target port
-            timeout: Connection timeout
-            
-        Returns:
-            ConnectionHandler if successful, None otherwise
-        """
+        # konek ke server
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(timeout)

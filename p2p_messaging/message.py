@@ -1,6 +1,4 @@
-"""
-Message Protocol for P2P Communication
-"""
+# Protokol pesan P2P
 import json
 from enum import Enum
 from datetime import datetime
@@ -8,7 +6,7 @@ from typing import Dict, Any, Optional
 
 
 class MessageType(Enum):
-    """Tipe-tipe pesan dalam protokol P2P"""
+    # Tipe pesan P2P
     MESSAGE = "MESSAGE"          # Pesan chat biasa
     BROADCAST = "BROADCAST"      # Broadcast ke semua peer
     JOIN = "JOIN"               # Peer bergabung ke jaringan
@@ -20,17 +18,7 @@ class MessageType(Enum):
 
 
 class Message:
-    """
-    Representasi pesan dalam jaringan P2P
-    
-    Attributes:
-        msg_type: Tipe pesan (MessageType)
-        sender_id: ID unik pengirim
-        sender_name: Nama pengirim
-        timestamp: Waktu pesan dibuat
-        data: Payload pesan
-        target_id: ID tujuan (optional, untuk direct message)
-    """
+    # Representasi pesan P2P
     
     def __init__(
         self,
@@ -48,7 +36,7 @@ class Message:
         self.target_id = target_id
     
     def to_dict(self) -> Dict[str, Any]:
-        """Convert message to dictionary"""
+        # ubah ke dict
         return {
             "type": self.msg_type.value,
             "sender_id": self.sender_id,
@@ -59,16 +47,19 @@ class Message:
         }
     
     def to_json(self) -> str:
-        """Serialize message to JSON string"""
+        # ubah ke JSON
+        # Ubah pesan ke JSON
         return json.dumps(self.to_dict())
     
     def to_bytes(self) -> bytes:
-        """Serialize message to bytes for network transmission"""
+        # ubah ke bytes
+        # Ubah pesan ke bytes untuk transmisi jaringan
         return (self.to_json() + "\n").encode('utf-8')
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Message':
-        """Create Message from dictionary"""
+        # buat dari dict
+        # Buat pesan dari dictionary
         msg = cls(
             msg_type=MessageType(data["type"]),
             sender_id=data["sender_id"],
@@ -81,12 +72,14 @@ class Message:
     
     @classmethod
     def from_json(cls, json_str: str) -> 'Message':
-        """Deserialize message from JSON string"""
+        # buat dari JSON
+        # Buat pesan dari JSON
         return cls.from_dict(json.loads(json_str))
     
     @classmethod
     def from_bytes(cls, data: bytes) -> 'Message':
-        """Deserialize message from bytes"""
+        # buat dari bytes
+        # Buat pesan dari bytes
         return cls.from_json(data.decode('utf-8').strip())
     
     def __str__(self) -> str:

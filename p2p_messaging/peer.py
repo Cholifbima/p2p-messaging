@@ -1,6 +1,4 @@
-"""
-Core Peer Implementation for P2P Messaging Network
-"""
+# Implementasi P2P Peer
 import threading
 import logging
 import time
@@ -15,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class PeerInfo:
-    """Information about a peer in the network"""
+    # Info tentang peer di jaringan
     
     def __init__(self, peer_id: str, name: str, host: str, port: int):
         self.peer_id = peer_id
@@ -25,6 +23,7 @@ class PeerInfo:
         self.last_seen = datetime.now()
     
     def to_dict(self) -> dict:
+        # ubah ke format dict
         return {
             "peer_id": self.peer_id,
             "name": self.name,
@@ -46,15 +45,7 @@ class PeerInfo:
 
 
 class Peer:
-    """
-    Main P2P Peer class that handles all peer-to-peer communication
-    
-    This class manages:
-    - Starting/stopping the peer node
-    - Connecting to other peers
-    - Sending and receiving messages
-    - Peer discovery and management
-    """
+    # Class utama untuk komunikasi P2P
     
     def __init__(
         self,
@@ -63,19 +54,9 @@ class Peer:
         host: str = "0.0.0.0",
         on_message: Optional[Callable[[str, str, str], None]] = None,
         on_peer_join: Optional[Callable[[str], None]] = None,
-        on_peer_leave: Optional[Callable[[str], None]] = None
+        on_peer_leave: Optional[Callable[[str], None]] = None,
+        on_peer_disconnect: Optional[Callable[[str], None]] = None
     ):
-        """
-        Initialize a new peer
-        
-        Args:
-            name: Display name for this peer
-            port: Port to listen on
-            host: Host to bind to (default: all interfaces)
-            on_message: Callback for received messages (sender_name, message, timestamp)
-            on_peer_join: Callback when peer joins
-            on_peer_leave: Callback when peer leaves
-        """
         self.name = name
         self.port = port
         self.host = host
@@ -100,7 +81,7 @@ class Peer:
         self.heartbeat_thread = None
     
     def start(self):
-        """Start the peer node"""
+        # jalankan peer
         # Start server
         self.server = P2PServer(
             host=self.host,
@@ -119,7 +100,7 @@ class Peer:
         logger.info(f"Peer ID: {self.peer_id}")
     
     def stop(self):
-        """Stop the peer node"""
+        # stop peer
         self.running = False
         
         # Notify peers we're leaving
@@ -144,16 +125,7 @@ class Peer:
         logger.info(f"Peer '{self.name}' stopped")
     
     def connect_to_peer(self, host: str, port: int) -> bool:
-        """
-        Connect to another peer
-        
-        Args:
-            host: Target peer's host
-            port: Target peer's port
-            
-        Returns:
-            True if connection successful
-        """
+        # konek ke peer lain
         handler = P2PClient.connect(host, port)
         if not handler:
             return False
@@ -178,13 +150,7 @@ class Peer:
         return True
     
     def send_message(self, text: str, target_peer_id: Optional[str] = None):
-        """
-        Send a message to a specific peer or broadcast to all
-        
-        Args:
-            text: Message text
-            target_peer_id: Target peer ID (None for broadcast)
-        """
+        # kirim pesan
         if target_peer_id:
             # Direct message
             msg = Message(
@@ -211,7 +177,7 @@ class Peer:
             self._broadcast_message(msg)
     
     def get_connected_peers(self) -> List[PeerInfo]:
-        """Get list of connected peers"""
+        # dapetin daftar peer yang konek
         with self.lock:
             return [
                 self.known_peers[pid] 
@@ -220,7 +186,7 @@ class Peer:
             ]
     
     def get_peer_info(self) -> dict:
-        """Get this peer's information"""
+        # info peer ini
         return {
             "peer_id": self.peer_id,
             "name": self.name,
@@ -231,13 +197,13 @@ class Peer:
     # ---- Private Methods ----
     
     def _handle_new_connection(self, handler: ConnectionHandler):
-        """Handle a new incoming connection"""
+        # handle koneksi baru
         handler.on_message = self._handle_message
         handler.on_disconnect = self._handle_disconnect
         handler.start()
     
     def _handle_message(self, message: Message, handler: ConnectionHandler):
-        """Handle received message based on type"""
+        # handle pesan masuk
         msg_type = message.msg_type
         
         if msg_type == MessageType.JOIN:
@@ -259,7 +225,7 @@ class Peer:
             self._handle_pong(message)
     
     def _handle_join(self, message: Message, handler: ConnectionHandler):
-        """Handle JOIN message from new peer"""
+        # handle JOIN message
         peer_id = message.sender_id
         peer_name = message.sender_name
         data = message.data
@@ -300,7 +266,7 @@ class Peer:
             self.on_peer_join(peer_name)
     
     def _handle_leave(self, message: Message, handler: ConnectionHandler):
-        """Handle LEAVE message"""
+        # handle LEAVE message
         peer_id = message.sender_id
         peer_name = message.sender_name
         
@@ -316,7 +282,7 @@ class Peer:
             self.on_peer_leave(peer_name)
     
     def _handle_chat_message(self, message: Message):
-        """Handle chat message"""
+        # handle pesan chat
         text = message.data.get("text", "")
         sender_name = message.sender_name
         sender_id = message.sender_id
@@ -326,7 +292,7 @@ class Peer:
             self.on_message(sender_name, text, timestamp, sender_id)
     
     def _handle_peers_list(self, message: Message, handler: ConnectionHandler):
-        """Handle PEERS list message"""
+        # handle daftar peers
         data = message.data
         
         # Store sender's info
@@ -360,7 +326,7 @@ class Peer:
                 ).start()
     
     def _handle_ping(self, message: Message, handler: ConnectionHandler):
-        """Handle PING message"""
+        # handle ping
         pong_msg = Message(
             msg_type=MessageType.PONG,
             sender_id=self.peer_id,
@@ -369,7 +335,7 @@ class Peer:
         handler.send(pong_msg)
     
     def _handle_pong(self, message: Message):
-        """Handle PONG response"""
+        # handle PONG response
         peer_id = message.sender_id
         with self.lock:
             if peer_id in self.known_peers:
